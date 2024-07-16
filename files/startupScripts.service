@@ -1,0 +1,9 @@
+[Unit]
+Description=test
+
+[Service]
+ExecStart=/usr/bin/mymatrix
+StandardOutput=journal+console
+
+[Install]
+WantedBy=multi-user.target

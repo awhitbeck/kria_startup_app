@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "The Matrix has you..."
+
+ifconfig eth0 192.168.0.2 netmask 255.255.0.0
+insmod /lib/modules/6.1.30-xilinx-v2023.2/extra/axi_memory_map.ko #plMinAddr=0x80000000 plMaxAddr=0x8fffffff
+cd /home/petalinux
+tftp -g -r zCCM_fw.tar.gz 192.168.0.1
+tftp -g -r system.bit 192.168.0.1
+tftp -g -r system.dtb 192.168.0.1
+tftp -g -r system.dts 192.168.0.1
+tar -xf zCCM_fw.tar.gz
+fpgautil -R
+fpgautil -b system.bit 
+export PYTHONPATH=/home/petalinux/zCCM_fw/firmware/submodules/axi-soc-ultra-plus-core/python/:/home/petalinux/zCCM_fw/firmware/submodules/surf/python/:/home/petalinux/zCCM_fw/firmware/python/
+python /usr/bin/rogue_app.py
